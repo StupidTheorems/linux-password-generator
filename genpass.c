@@ -4,7 +4,8 @@
 #include <time.h>
 
 /* Configuration macros */
-#define WORDS 8 /* Amount of words to be present in the password */
+#define MAX_CHAR 0 /* Defines max amount of characters your password may consist of. Setting this to 0 disables character limit for your password */
+#define WORDS 10 /* Amount of words to be present in the password */
 #define MAX_WORD_LEN 64 /* Max amount of character to be included in single word (further characters get trashed) */
 
 /* Password */
@@ -115,12 +116,25 @@ void fpass(void) {
 	int cnt = 0;
 	for(int i = 0; i < WORDS; i++) {
 		for(int j = 0; wbuffer[i][j] != '\0'; j++) {
-			pass[cnt] = wbuffer[i][j];
-			if(wbuffer[i][j+1] == '\0') {
-				cnt++;
-				pass[cnt] = '-';
+			if(MAX_CHAR) {
+				if(cnt < MAX_CHAR + 1) {
+					pass[cnt] = wbuffer[i][j];
+					if(wbuffer[i][j+1] == '\0') {
+						cnt++;
+						pass[cnt] = '-';
+					}
+					cnt++;
+				}
+				else break;
 			}
-			cnt++;
+			else {
+				pass[cnt] = wbuffer[i][j];
+				if(wbuffer[i][j+1] == '\0') {
+					cnt++;
+					pass[cnt] = '-';
+				}
+				cnt++;
+			}
 		}
 	}
 	pass[cnt-1] = '\0';
